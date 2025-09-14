@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Katy Perry — Curitiba | 16/09/2025</title>
+<style>
+/* Lightweight styles that mimic Livepass look */
+:root{
+  --primary:#35515c;
+  --muted:#f1f1f1;
+  --card-bg:#fff;
+}
+*{box-sizing:border-box}
+body{font-family: "Helvetica Neue", Arial, sans-serif; margin:0; background:var(--muted); color:#111;}
+.header{background:#000; color:#fff; text-align:center;}
+.banner{width:100%; max-height:320px; object-fit:cover; display:block;}
+.container{max-width:1000px; margin:0 auto; padding:20px;}
+.event-title{font-size:20px; font-weight:700; margin:12px 0 6px;}
+.event-sub{color:#666; margin-bottom:18px;}
+.ticket{background:var(--card-bg); border-radius:10px; padding:14px; display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; box-shadow:0 1px 4px rgba(0,0,0,0.05);}
+.ticket .left{display:flex; flex-direction:column;}
+.ticket .name{font-weight:600;}
+.controls{display:flex; align-items:center; gap:10px;}
+.qty{width:42px; text-align:center; font-weight:600; display:inline-block;}
+.btn-qty{background:#eee; border:0; padding:8px 10px; border-radius:6px; cursor:pointer; font-weight:700;}
+.price{font-weight:700;}
+.checkout-wrap{position:fixed; left:0; right:0; bottom:0; padding:12px; background:linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.05)); display:flex; justify-content:center;}
+.checkout{width:94%; max-width:980px; background:var(--primary); color:#fff; padding:14px 18px; border-radius:10px; text-decoration:none; display:flex; align-items:center; justify-content:space-between; font-weight:700;}
+.checkout .left{display:flex; gap:12px; align-items:center;}
+.cart-icon{width:28px; height:28px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.12); border-radius:6px;}
+@media(min-width:700px){ .ticket{padding:18px;} .event-title{font-size:24px;} }
+</style>
+</head>
+<body>
+  <header class="header">
+    <img class="banner" src="images/KP_Livepass_Headerevento_1240x480pxvv.jpg" alt="Banner evento">
+  </header>
+  <main class="container">
+    <div class="event-title">KATY PERRY | THE LIFETIMES TOUR</div>
+    <div class="event-sub">Arena da Baixada — CURITIBA — 16/09/2025</div>
+
+    <!-- Tickets list -->
+    <section id="tickets">
+
+      <div class="ticket">
+        <div class="left">
+          <div class="name">Inteira</div>
+          <div class="subtitle">Setor padrão</div>
+        </div>
+        <div class="controls">
+          <button class="btn-qty" data-action="minus" data-index="0">−</button>
+          <div class="qty" id="qty-0">0</div>
+          <button class="btn-qty" data-action="plus" data-index="0">+</button>
+          <div class="price">R$ 1.350,00</div>
+        </div>
+      </div>
+
+      <div class="ticket">
+        <div class="left">
+          <div class="name">Meia</div>
+          <div class="subtitle">Setor padrão</div>
+        </div>
+        <div class="controls">
+          <button class="btn-qty" data-action="minus" data-index="1">−</button>
+          <div class="qty" id="qty-1">0</div>
+          <button class="btn-qty" data-action="plus" data-index="1">+</button>
+          <div class="price">R$ 675,00</div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <div class="checkout-wrap" aria-hidden="false">
+    <a id="checkout-btn" class="checkout" href="https://go.paradisepagbr.com/isufri1rt1" target="_blank" rel="noopener noreferrer">
+      <div class="left">
+        <div class="cart-icon">🛒</div>
+        <div class="txt">Comprar Ingressos — R$ 0,00</div>
+      </div>
+      <div class="right">Finalizar</div>
+    </a>
+  </div>
+
+<script>
+(function(){
+  function formatBR(number){
+    return number.toFixed(2).replace('.',',').replace(/\B(?=(\d{{3}})+(?!\d))/g, '.');
+  }
+
+  const tickets = [{'name': 'Inteira', 'price': 1350.0}, {'name': 'Meia', 'price': 675.0}];
+  // build listener and state
+  const state = tickets.map(t=>({qty:0, price:t.price, name:t.name}));
+
+  function updateUI(){
+    // update qty displays
+    state.forEach((s,i)=>{
+      const q = document.querySelector('#qty-'+i);
+      if(q) q.textContent = s.qty;
+    });
+    // compute totals
+    let total = 0, totalQty = 0;
+    state.forEach(s=>{ total += s.qty * s.price; totalQty += s.qty; });
+    const btn = document.getElementById('checkout-btn');
+    if(totalQty>0){
+      btn.textContent = totalQty + ' Ingresso' + (totalQty>1?'s':'') + ' — R$ ' + formatBR(total);
+    } else {
+      btn.textContent = 'Comprar Ingressos — R$ 0,00';
+    }
+  }
+
+  document.addEventListener('click', function(e){
+    if(e.target.dataset && e.target.dataset.action){
+      const action = e.target.dataset.action;
+      const index = parseInt(e.target.dataset.index);
+      if(action === 'plus'){ state[index].qty++; updateUI(); }
+      if(action === 'minus' && state[index].qty>0){ state[index].qty--; updateUI(); }
+    }
+  });
+
+  // expose to window for debugging
+  window.optimizedTicketsState = state;
+  updateUI();
+})();
+</script>
+
+</body>
+</html>
